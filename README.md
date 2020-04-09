@@ -1,5 +1,6 @@
 # civetcat
 Civet cat  狸猫 远控
+突破网络限制出网
 
 ### 实现协议
 - TCP
@@ -7,11 +8,8 @@ Civet cat  狸猫 远控
 - KCP
 - HTTP
 - HTTPS
-- RPC
-- Email
 - ICMP
 - DNS
-- Socket
 - WebSocket
 
 ### 实现功能
@@ -20,17 +18,17 @@ Civet cat  狸猫 远控
 
 ### 使用说明
 ``` 
-./backend_ 0.0.0.0:8081 12345     
-./agent_ 0.0.0.0:8081 12345
+./backend_ 0.0.0.0:8081 12345   // ./backedn listen_addr token
+./agent_ 0.0.0.0:8081 12345     // 远控上线
 ```
 
 ``` 
 ./backend_ 0.0.0.0:8081 12345    
-$ ls agent // 获取在线机器
+$ ls agent              // 获取在线机器
 127.0.0.1:54920
-$ use 127.0.0.1:54920
-$ uname -r
+$ use 127.0.0.1:54920   // 切换到此机器上
+$ uname -r              // 执行普通shell命令
 5.3.18-1-MANJARO
-$ upload a.exe b.exe  (本地) (远程)
-$ download a.exe b.exe 
+$ upload a.exe b.exe  (本地) (远程)  // 上传目标文件
+$ download a.exe b.exe               // 下载目标文件
 ```
