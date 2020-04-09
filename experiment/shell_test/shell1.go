@@ -1,17 +1,9 @@
-/**
- * @Author: DollarKillerX
- * @Description: shell1.go
- * @Github: https://github.com/dollarkillerx
- * @Date: Create in 下午3:48 2019/12/28
- */
 package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
-	"io"
-	"io/ioutil"
-	"log"
 	"os"
 	"os/exec"
 	"strings"
@@ -29,22 +21,26 @@ func main() {
 			}
 
 		}
-		cmdString = strings.TrimSuffix(cmdString, "\n")
+		cmdString = strings.TrimSpace(cmdString)
 		command := exec.Command("/bin/bash", "-c", cmdString)
-		command.Stderr = os.Stderr
-		command.Stdout = os.Stdout
+		bufferErr := bytes.NewBufferString("")
+		bufferOut := bytes.NewBufferString("")
+		command.Stderr = bufio.NewWriter(bufferErr)
+		command.Stdout = bufio.NewWriter(bufferOut)
 		e = command.Run()
+		out := strings.TrimSpace(bufferOut.String())
+		errS := strings.TrimSpace(bufferErr.String())
+		if  out != "" {
+			fmt.Println("Out: ")
+			fmt.Println(out)
+		}else if errS != "" {
+			fmt.Println("Err: ")
+			fmt.Println(errS)
+		}
+
 		if e != nil {
-			bytes, e := ioutil.ReadAll(os.Stderr)
-			if e != nil {
-				panic(e)
-				if e == io.EOF {
-					continue
-				}
-				log.Println(e)
-				continue
-			}
-			log.Println(string(bytes))
+			fmt.Println("Err: ",e)
+			continue
 		}
 	}
 }

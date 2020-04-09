@@ -1,19 +1,37 @@
-/**
- * @Author: DollarKillerX
- * @Description: shell.go
- * @Github: https://github.com/dollarkillerx
- * @Date: Create in 下午3:41 2019/12/28
- */
 package utils
 
-//func RunShell(cmdString string) string {
-//	cmdString = strings.TrimSuffix(cmdString, "\n")
-//	command := exec.Command(cmdString)
-//	command.Stderr = os.Stderr
-//	command.Stdout = os.Stdout
-//	err := command.Run()
-//	if err != nil {
-//		return os.Stderr
-//	}
-//
-//}
+import (
+	"bytes"
+	"os/exec"
+	"strings"
+)
+
+func RunShell(cmdString string) (string,error) {
+	cmdString = strings.TrimSpace(cmdString)
+	os := GetOs()
+	bufferErr := bytes.NewBufferString("")
+	bufferOut := bytes.NewBufferString("")
+	var command *exec.Cmd
+	switch os {
+	case "linux":
+		command = exec.Command("/bin/bash", "-c", cmdString)
+	default:
+		command = exec.Command("cmd", "/C", cmdString)
+	}
+	command.Stderr = bufferErr
+	command.Stdout = bufferOut
+	err := command.Run()
+	errS := strings.TrimSpace(UTF8(bufferErr.String()))
+	outS := strings.TrimSpace(UTF8(bufferOut.String()))
+	if err != nil {
+		return errS,err
+	}
+	if outS != "" {
+		return outS,nil
+	}
+
+	if errS != "" {
+		return errS,nil
+	}
+	return "",nil
+}
