@@ -19,12 +19,12 @@ func Shell(cmd string) *pb.DeGeneralResp {
 	if err != nil {
 		return &pb.DeGeneralResp{
 			Success: false,
-			Body:    utils.UTF8(shell),
+			Body:    shell,
 		}
 	}
 	return &pb.DeGeneralResp{
 		Success: true,
-		Body:    utils.UTF8(shell),
+		Body:    shell,
 	}
 }
 
