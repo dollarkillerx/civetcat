@@ -22,7 +22,6 @@ message deGeneralResp {
   bytes Bytes = 1;
   string Body = 2;
   bool Success = 3;
-  bool  Error =4;
 }
 
 message Resp {
