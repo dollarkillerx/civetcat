@@ -13,11 +13,11 @@ func CheckGBK(datas string) bool {
 			continue
 		} else {
 			//大于127的使用双字节编码，落在gbk编码范围内的字符
-			if  data[i] >= 0x81 &&
+			if data[i] >= 0x81 &&
 				data[i] <= 0xfe &&
-				data[i + 1] >= 0x40 &&
-				data[i + 1] <= 0xfe &&
-				data[i + 1] != 0xf7 {
+				data[i+1] >= 0x40 &&
+				data[i+1] <= 0xfe &&
+				data[i+1] != 0xf7 {
 				i += 2
 				continue
 			} else {
@@ -39,7 +39,7 @@ func UTF8(data string) string {
 	gbk := CheckGBK(data)
 	if !gbk {
 		return data
-	}else {
-		return string(ConvertToByte(data,"gbk","utf8"))
+	} else {
+		return string(ConvertToByte(data, "gbk", "utf8"))
 	}
 }

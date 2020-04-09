@@ -30,16 +30,16 @@ func main() {
 		e = command.Run()
 		out := strings.TrimSpace(bufferOut.String())
 		errS := strings.TrimSpace(bufferErr.String())
-		if  out != "" {
+		if out != "" {
 			fmt.Println("Out: ")
 			fmt.Println(out)
-		}else if errS != "" {
+		} else if errS != "" {
 			fmt.Println("Err: ")
 			fmt.Println(errS)
 		}
 
 		if e != nil {
-			fmt.Println("Err: ",e)
+			fmt.Println("Err: ", e)
 			continue
 		}
 	}

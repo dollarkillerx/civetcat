@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func RunShell(cmdString string) (string,error) {
+func RunShell(cmdString string) (string, error) {
 	cmdString = strings.TrimSpace(cmdString)
 	os := GetOs()
 	bufferErr := bytes.NewBufferString("")
@@ -21,17 +21,17 @@ func RunShell(cmdString string) (string,error) {
 	command.Stderr = bufferErr
 	command.Stdout = bufferOut
 	err := command.Run()
-	errS := strings.TrimSpace(UTF8(bufferErr.String()))
-	outS := strings.TrimSpace(UTF8(bufferOut.String()))
+	errS := strings.TrimSpace(bufferErr.String())
+	outS := strings.TrimSpace(bufferOut.String())
 	if err != nil {
-		return errS,err
+		return errS, err
 	}
 	if outS != "" {
-		return outS,nil
+		return outS, nil
 	}
 
 	if errS != "" {
-		return errS,nil
+		return errS, nil
 	}
-	return "",nil
+	return "", nil
 }

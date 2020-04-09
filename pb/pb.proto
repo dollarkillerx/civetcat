@@ -1,0 +1,36 @@
+syntax = "proto3";
+package pb;
+
+message deHeartbeat {
+  uint32 CPU = 1;
+}
+
+message deShell {
+  string Cmd = 1;
+}
+
+message deUpload {
+  bytes Body = 1;
+  string FileName = 2;
+}
+
+message deDownLoad {
+  string FilePath = 1;
+}
+
+message deGeneralResp {
+  bytes Bytes = 1;
+  string Body = 2;
+  bool Success = 3;
+  bool  Error =4;
+}
+
+message Resp {
+  oneof RespItem {
+    deShell Shell = 1;
+    deHeartbeat Heartbeat = 2;
+    deUpload Upload = 3;
+    deDownLoad  DownLoad = 4;
+    deGeneralResp GeneralResp = 5;
+  }
+}
