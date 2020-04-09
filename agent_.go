@@ -41,55 +41,34 @@ func main() {
 			switch ics := ic.RespItem.(type) {
 			case *pb.Resp_DownLoad:
 				load := agent_server.DownLoad(ics.DownLoad.FilePath)
-				marshal, err := proto.Marshal(load)
+				pb := &pb.Resp{
+					RespItem:&pb.Resp_GeneralResp{GeneralResp:load},
+				}
+				marshal, err := proto.Marshal(pb)
 				if err != nil {
 					log.Fatalln(err)
 				}
-				err = conn.Write(marshal)
-				if err != nil {
-					conn.Close()
-					for {
-						err := conn.Reconnect()
-						if err != nil {
-							continue
-						}
-						break
-					}
-				}
+				conn.Write(marshal)
 			case *pb.Resp_Shell:
 				shell := agent_server.Shell(ics.Shell.Cmd)
-				marshal, err := proto.Marshal(shell)
+				pb := &pb.Resp{
+					RespItem:&pb.Resp_GeneralResp{GeneralResp:shell},
+				}
+				marshal, err := proto.Marshal(pb)
 				if err != nil {
 					log.Fatalln(err)
 				}
-				err = conn.Write(marshal)
-				if err != nil {
-					conn.Close()
-					for {
-						err := conn.Reconnect()
-						if err != nil {
-							continue
-						}
-						break
-					}
-				}
+				conn.Write(marshal)
 			case *pb.Resp_Upload:
 				shell := agent_server.Upload(ics.Upload.FileName, ics.Upload.Body)
-				marshal, err := proto.Marshal(shell)
+				pb := &pb.Resp{
+					RespItem:&pb.Resp_GeneralResp{GeneralResp:shell},
+					}
+				marshal, err := proto.Marshal(pb)
 				if err != nil {
 					log.Fatalln(err)
 				}
-				err = conn.Write(marshal)
-				if err != nil {
-					conn.Close()
-					for {
-						err := conn.Reconnect()
-						if err != nil {
-							continue
-						}
-						break
-					}
-				}
+				conn.Write(marshal)
 			}
 		}
 

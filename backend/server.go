@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang/protobuf/proto"
 	"github.com/gorilla/websocket"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"sync"
@@ -81,6 +82,55 @@ func (s *Server) registry(ctx *gin.Context) {
 
 	go s.listen(conn)
 	log.Println("Reg Success: ", conn.RemoteAddr().String())
+}
+
+func (s *Server)Upload(src,des string) error {
+	if s.Local == "" {
+		return errors.New("local is null")
+	}
+	s.Mu.Lock()
+	conn, bo := s.Db[s.Local]
+	s.Mu.Unlock()
+	if !bo {
+		return errors.New("local not exits")
+	}
+	file, err := ioutil.ReadFile(src)
+	if err != nil {
+		return err
+	}
+	result := &pb.Resp{
+		RespItem: &pb.Resp_Upload{Upload:&pb.DeUpload{
+			Body:file,
+			FileName:des,
+		}},
+	}
+	marshal, err := proto.Marshal(result)
+	if err != nil {
+		return err
+	}
+	return conn.WriteMessage(websocket.TextMessage,marshal)
+}
+
+func (s *Server)Download(des string) error {
+	if s.Local == "" {
+		return errors.New("local is null")
+	}
+	s.Mu.Lock()
+	conn, bo := s.Db[s.Local]
+	s.Mu.Unlock()
+	if !bo {
+		return errors.New("local not exits")
+	}
+	result := &pb.Resp{
+		RespItem: &pb.Resp_DownLoad{
+			DownLoad:&pb.DeDownLoad{FilePath:des},
+		},
+	}
+	marshal, err := proto.Marshal(result)
+	if err != nil {
+		return err
+	}
+	return conn.WriteMessage(websocket.TextMessage,marshal)
 }
 
 func (s *Server) WriteShell(cmd string) error {

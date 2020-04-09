@@ -1,8 +1,15 @@
 package utils
 
-import "github.com/axgle/mahonia"
+import (
+	"github.com/axgle/mahonia"
+)
 
-func CheckGBK(datas string) bool {
+func CheckGBK(datas string) (re bool) {
+	defer func() {
+		if err := recover(); err != nil {
+			re = false
+		}
+	}()
 	data := []byte(datas)
 	length := len(data)
 	var i int = 0

@@ -5,6 +5,7 @@ import (
 	"civetcat/backend"
 	"civetcat/utils"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -51,9 +52,45 @@ func main() {
 			}
 			conn.Local = split[1]
 		case strings.Index(cmdString, "upload") == 0:
-
+			// upload src.file des.file
+			i := strings.Split(cmdString, " ")
+			if len(i) != 3 {
+				fmt.Println("upload src.file des.file")
+				continue
+			}
+			e := conn.Upload(i[1], i[2])
+			if e != nil {
+				log.Println(e)
+				continue
+			}
+			result := <-conn.RespChan
+			if result.GeneralResp.Success {
+				fmt.Println("Upload Success")
+			}else {
+				fmt.Println("Upload Error")
+			}
 		case strings.Index(cmdString, "download") == 0:
-
+			// download src.file des.file
+			i := strings.Split(cmdString, " ")
+			if len(i) != 3 {
+				fmt.Println("download src.file des.file")
+				continue
+			}
+			e := conn.Download(i[2])
+			if e != nil {
+				log.Println(e)
+				continue
+			}
+			result := <-conn.RespChan
+			if result.GeneralResp.Success {
+				e := ioutil.WriteFile(i[1], result.GeneralResp.Bytes, 00666)
+				if e != nil {
+					fmt.Println(e)
+				}
+				fmt.Println("Download Success")
+			}else {
+				fmt.Println("Download Error")
+			}
 		default:
 			if cmdString == "" {
 				continue

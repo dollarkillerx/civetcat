@@ -52,6 +52,7 @@ func (a *AgentWebSocket) heartbeat() error {
 				if err != nil {
 					a.Close()
 					for {
+						a.Close()
 						err = a.Reconnect()
 						if err != nil {
 							continue
