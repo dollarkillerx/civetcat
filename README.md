@@ -2,6 +2,8 @@
 Civet cat  狸猫 远控
 突破网络限制出网
 
+开源版本实现基础功能  商业合作请联系dollarkiller#dollarkiller.com
+
 ### 实现协议
 - TCP
 - UDP 
